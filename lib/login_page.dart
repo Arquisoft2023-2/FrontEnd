@@ -2,18 +2,44 @@
 
 import 'package:flutter/material.dart';
 import 'package:login/components/buttons.dart';
-
 import 'components/textfield.dart';
-
+import 'map_page.dart';
+import 'package:quickalert/quickalert.dart';
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
   //controladores de edición de texto
   final userIDController = TextEditingController();
   final passwordController = TextEditingController();
+  
 
+//create checkCredentials function that returns boolean
+  bool checkCredentials() {
+    //solo para fines de prueba
+    if (userIDController.text == "admin" && passwordController.text == "admin") {
+      return true;
+    } else {
+      return false;
+    }
+  }
   //controladores boton de inicio de sesion
-  void sigIn() {}
+  void sigIn(BuildContext context) {
+    //if checkCredentials is true, then navigate to map page
+    if (checkCredentials()) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => MapPage()),
+      );
+    } else {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: "Credenciales incorrectas",
+      );
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +100,35 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 25),
+              // add another function to the button
 
-              Buttons(onTap: sigIn),
+              //create elevated button to sign in
+              ElevatedButton(
+                onPressed: () {
+                  sigIn(context);
+                },
+
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                  padding: EdgeInsets.symmetric(horizontal: 200, vertical: 50),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                ),
+                child: Text(
+                  "Iniciar Sesión",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+
 
               const SizedBox(
                 height: 40,
               ),
 
+              
               Image(
                 image: AssetImage('lib/images/despegue_avion.png'),
                 height: 130,
