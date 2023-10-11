@@ -1,7 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:ffi';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:login/components/buttons.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 
 import 'components/textfield.dart';
 
@@ -12,8 +17,29 @@ class LoginPage extends StatelessWidget {
   final userIDController = TextEditingController();
   final passwordController = TextEditingController();
 
+  static const loginUrl = "http://1000:1000/apiAuth";
+
   //controladores boton de inicio de sesion
-  void sigIn() {}
+  static sigIn(datosCreden) async {
+    try {
+      print("sirve mas o menos");
+      //Navigator.push(context, MaterialPageRoute(builder: (context) => Pruebas()));
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    /*try {
+      final loginRes = await http.post(Uri.parse(loginUrl), body: datosCreden);
+
+      if (loginRes.body != "") {
+        print("sirve mas o menos");
+        return Pruebas();
+      } else {
+        debugPrint("Error en el inicio de sesión");
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +71,7 @@ class LoginPage extends StatelessWidget {
                 controller: userIDController,
                 hintText: "ID de usuario",
                 obscureText: false,
+                expresion: r"^[1-9]\d{0,9}$",
               ),
               const SizedBox(
                 height: 25,
@@ -54,6 +81,7 @@ class LoginPage extends StatelessWidget {
                 controller: passwordController,
                 hintText: "Contraseña",
                 obscureText: true,
+                expresion: r"^.*$",
               ),
 
               const SizedBox(
@@ -75,7 +103,16 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(height: 25),
 
-              Buttons(onTap: sigIn),
+              //Boton de Sign In
+              Buttons(
+                onTap: () {
+                  var datosCreden = {
+                    "IDUsuario": userIDController.text,
+                    "PasswordUsuario": passwordController.text
+                  };
+                  LoginPage.sigIn(datosCreden);
+                },
+              ),
 
               const SizedBox(
                 height: 40,
