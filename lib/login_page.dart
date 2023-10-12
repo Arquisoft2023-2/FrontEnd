@@ -52,12 +52,12 @@ class LoginPage extends StatelessWidget {
           headers: {"Content-type": "application/json"},
           body: json.encode({'query': graphQLQuery}));
 
-      print("Response status: ${response.statusCode}");
-      print("Response body: ${response.body}");
-
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 &&
+          (response.body != '{"data":{"login":"false"}}')) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MapPage()));
+        print("Response status: ${response.statusCode}");
+        print("Response body: ${response.body}");
       }
     } catch (e) {
       print(e);
