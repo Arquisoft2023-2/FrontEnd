@@ -7,8 +7,9 @@ import 'package:login/components/buttons.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-
 import 'components/textfield.dart';
+import 'map_page.dart';
+import 'package:quickalert/quickalert.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -17,28 +18,50 @@ class LoginPage extends StatelessWidget {
   final userIDController = TextEditingController();
   final passwordController = TextEditingController();
 
-  static const loginUrl = "http://1000:1000/apiAuth";
+  final loginUrl = "http://localhost:1000/apiAuth";
+
+//create checkCredentials function that returns boolean
+  bool checkCredentials() {
+    //solo para fines de prueba
+    if (userIDController.text == "123" && passwordController.text == "admin") {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   //controladores boton de inicio de sesion
-  static sigIn(datosCreden) async {
+  void sigIn(String id, String password, context) async {
+    //if checkCredentials is true, then navigate to map page
+    /*if (checkCredentials()) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => MapPage()),
+      );
+    } else {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: "Credenciales incorrectas",
+      );
+    }*/
+    String graphQLQuery = 'query{ login(id: $id, password: "$password") }';
     try {
-      print("sirve mas o menos");
-      //Navigator.push(context, MaterialPageRoute(builder: (context) => Pruebas()));
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-    /*try {
-      final loginRes = await http.post(Uri.parse(loginUrl), body: datosCreden);
+      var url = Uri.parse(loginUrl);
+      var response = await http.post(url,
+          headers: {"Content-type": "application/json"},
+          body: json.encode({'query': graphQLQuery}));
 
-      if (loginRes.body != "") {
-        print("sirve mas o menos");
-        return Pruebas();
-      } else {
-        debugPrint("Error en el inicio de sesión");
+      print("Response status: ${response.statusCode}");
+      print("Response body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => MapPage()));
       }
     } catch (e) {
-      debugPrint(e.toString());
-    }*/
+      print(e);
+    }
   }
 
   @override
@@ -102,16 +125,27 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 25),
+              // add another function to the button
 
-              //Boton de Sign In
-              Buttons(
-                onTap: () {
-                  var datosCreden = {
-                    "IDUsuario": userIDController.text,
-                    "PasswordUsuario": passwordController.text
-                  };
-                  LoginPage.sigIn(datosCreden);
+              //create elevated button to sign in
+              ElevatedButton(
+                onPressed: () {
+                  sigIn(
+                      userIDController.text, passwordController.text, context);
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                  padding: EdgeInsets.symmetric(horizontal: 200, vertical: 50),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                ),
+                child: Text(
+                  "Iniciar Sesión",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
               ),
 
               const SizedBox(
