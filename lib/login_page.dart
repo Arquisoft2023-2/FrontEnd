@@ -3,13 +3,11 @@
 import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:login/components/buttons.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
 import 'dart:convert';
 import 'components/textfield.dart';
 import 'map_page.dart';
-import 'package:quickalert/quickalert.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -20,31 +18,13 @@ class LoginPage extends StatelessWidget {
 
   final loginUrl = "http://localhost:1000/apiAuth";
 
-//create checkCredentials function that returns boolean
-  bool checkCredentials() {
-    //solo para fines de prueba
-    if (userIDController.text == "123" && passwordController.text == "admin") {
-      return true;
-    } else {
-      return false;
-    }
-  }
+
+  final storage = new FlutterSecureStorage();
 
   //controladores boton de inicio de sesion
+
+
   void sigIn(String id, String password, context) async {
-    //if checkCredentials is true, then navigate to map page
-    /*if (checkCredentials()) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => MapPage()),
-      );
-    } else {
-      QuickAlert.show(
-        context: context,
-        type: QuickAlertType.error,
-        title: "Credenciales incorrectas",
-      );
-    }*/
     String graphQLQuery = 'query{ login(id: $id, password: "$password") }';
     try {
       var url = Uri.parse(loginUrl);
@@ -57,7 +37,11 @@ class LoginPage extends StatelessWidget {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => MapPage()));
         print("Response status: ${response.statusCode}");
-        print("Response body: ${response.body}");
+        //parse response body
+        var data = jsonDecode(response.body);
+        await storage.write(key: "token", value: data["data"]["login"]);
+        String? token = await storage.read(key: "token");
+        print(token);
       }
     } catch (e) {
       print(e);
