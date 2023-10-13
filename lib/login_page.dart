@@ -19,7 +19,7 @@ class LoginPage extends StatelessWidget {
   final loginUrl = "http://localhost:1000/apiAuth";
 
 
-  final storage = new FlutterSecureStorage();
+    final storage = FlutterSecureStorage();
 
   //controladores boton de inicio de sesion
 
@@ -40,6 +40,7 @@ class LoginPage extends StatelessWidget {
         //parse response body
         var data = jsonDecode(response.body);
         await storage.write(key: "token", value: data["data"]["login"]);
+        await storage.write(key: "id", value: id);
         String? token = await storage.read(key: "token");
         print(token);
       }
