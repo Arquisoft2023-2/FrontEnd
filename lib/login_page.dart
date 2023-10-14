@@ -1,13 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'dart:ffi';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'components/textfield.dart';
 import 'map_page.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import './services/storage_item.dart';
+
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -18,11 +16,7 @@ class LoginPage extends StatelessWidget {
 
   final loginUrl = "http://localhost:1000/apiAuth";
 
-
-    final storage = FlutterSecureStorage();
-
   //controladores boton de inicio de sesion
-
 
   void sigIn(String id, String password, context) async {
     String graphQLQuery = 'query{ login(id: $id, password: "$password") }';
@@ -35,14 +29,14 @@ class LoginPage extends StatelessWidget {
       if (response.statusCode == 200 &&
           (response.body != '{"data":{"login":"false"}}')) {
         Navigator.pushReplacement(
+            //send storage to map page
+
             context, MaterialPageRoute(builder: (context) => MapPage()));
         print("Response status: ${response.statusCode}");
         //parse response body
         var data = jsonDecode(response.body);
-        await storage.write(key: "token", value: data["data"]["login"]);
-        await storage.write(key: "id", value: id);
-        String? token = await storage.read(key: "token");
-        print(token);
+        SecureStorage().writeSecureData("token", data["data"]["login"]);
+        SecureStorage().writeSecureData("id", id);
       }
     } catch (e) {
       print(e);

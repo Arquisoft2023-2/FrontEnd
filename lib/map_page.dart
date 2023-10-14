@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
 import 'dart:async';
+import './services/storage_item.dart';
+
 //create blank page with scaffold called MapPage, the page should not have a back button
 class MapPage extends StatelessWidget {
   void showAlert(BuildContext context) {
     QuickAlert.show(context: context, type: QuickAlertType.warning);
   }
+
   final notificationUrl = "http://localhost:1000/apiNotification";
 
-  void recurrentQuery() {
-    Timer.periodic(Duration(minutes: 1), (timer) {
-      String graphQLQuery = 'query{ getNotifications }';
+  void recurrentQuery() async {
+    Timer.periodic(Duration(minutes: 1), (timer) async {
+      String? token = await SecureStorage().readSecureData("token");
+      //por ahora solo se envia el token
     });
   }
 
@@ -18,6 +22,8 @@ class MapPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //call recurrentQuery
+
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text("Mapa"),
@@ -29,7 +35,7 @@ class MapPage extends StatelessWidget {
             Text("Mapa"),
             ElevatedButton(
               onPressed: () {
-                showAlert(context);
+                recurrentQuery();
               },
               child: Text("Alerta"),
             ),
