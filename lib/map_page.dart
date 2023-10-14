@@ -13,7 +13,7 @@ class MapPage extends StatelessWidget {
 
   final notificationUrl = "http://localhost:1000/apiNotification";
 
-  void recurrentQuery(BuildContext context) async {
+  void recurrentQuery() async {
     Timer.periodic(Duration(minutes: 1), (timer) async {
       String? token = await SecureStorage().readSecureData("token");
       String? plate = await SecureStorage().readSecureData("Plate");
@@ -26,9 +26,6 @@ class MapPage extends StatelessWidget {
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);
           print(data);
-          if (data["data"]["getNotifications"].length > 0) {
-            showAlert(context);
-          }
         }
       } catch (e) {
         print(e);
