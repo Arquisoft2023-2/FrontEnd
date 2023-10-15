@@ -7,8 +7,14 @@ services:
     ports:
       - "1000:1000" 
     depends_on:
+      - notification
       - authms
-      - user
+
+  notification:
+    image: jyarac/notification-ms
+    container_name: notification-microservice
+    ports:
+      - "3000:3000"
 
   authms:
     image: jfc12/authms
@@ -30,10 +36,3 @@ services:
     environment:
         ACCEPT_EULA: "Y"
         SA_PASSWORD: "Password1!"
-
-  user:
-    image: quhan/users
-    container_name: user-microservice
-    ports:
-      - "8080:8080"
-
