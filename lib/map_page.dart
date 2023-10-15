@@ -8,19 +8,70 @@ class MapPage extends StatelessWidget {
   }
   final notificationUrl = "http://localhost:1000/apiNotification";
 
-  void recurrentQuery() {
+  /*void recurrentQuery() {
     Timer.periodic(Duration(minutes: 1), (timer) {
       String graphQLQuery = 'query{ getNotifications }';
     });
-  }
+  }*/
 
   MapPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            UserAccountsDrawerHeader(
+              accountName: Text('SePuedeQuitar'),
+              accountEmail: Text('SePuedeQuitar@quitar.com'),  
+              currentAccountPicture: CircleAvatar(
+                child: ClipOval(
+                  child: Image.network('https://cdn-icons-png.flaticon.com/512/1995/1995504.png',
+                  width: 90,
+                  height: 90,
+                  fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              decoration: const BoxDecoration(
+                color: Colors.blue,
+                image: DecorationImage(
+                  image: NetworkImage('https://cdn.pixabay.com/photo/2012/06/28/08/26/plane-50893_960_720.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Perfil'),
+              onTap: () => null,
+            ),
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text('Mensajes'),
+              onTap: () => null,
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Configuración'),
+              onTap: () => null,
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app),
+              title: Text('Salir'),
+              onTap: () => null,
+            )
+          ],
+        ),
+      ),
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text("Mapa"),
+        title: const Text("Mapa"),
+        backgroundColor: const LinearGradient(
+          colors: [Color(0xFF7CC6CD),Color(0XFF001F29)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ).colors[0],
       ),
       body: Center(
         child: Column(
@@ -31,7 +82,7 @@ class MapPage extends StatelessWidget {
               onPressed: () {
                 showAlert(context);
               },
-              child: Text("Alerta"),
+              child: const Text("Alerta"),
             ),
           ],
         ),

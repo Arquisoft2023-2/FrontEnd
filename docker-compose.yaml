@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  apig:
+    image: quhan/api-gateway
+    container_name: apig-component
+    ports:
+      - "1000:1000" 
+    depends_on:
+      - authms
+      - user
+
+  authms:
+    image: jfc12/authms
+    depends_on:
+        - "authmsdbc"
+    container_name: authms_c
+    ports:
+        - "7049:80"
+    environment:
+      ASPNETCORE_URLS: "http://+"
+      ASPNETCORE_ENVIRONMENT: Development
+
+
+  authmsdbc:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    container_name: authmsdbc
+    ports:
+        - "1433:1433"
+    environment:
+        ACCEPT_EULA: "Y"
+        SA_PASSWORD: "Password1!"
+
+  user:
+    image: quhan/users
+    container_name: user-microservice
+    ports:
+      - "8080:8080"
+
