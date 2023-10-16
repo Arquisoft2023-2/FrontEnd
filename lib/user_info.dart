@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:login/widgets/menu_lateral.dart';
 import 'dart:convert';
 import 'components/textfield.dart';
 import 'map_page.dart';
@@ -47,10 +48,77 @@ class UserInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[300],
-        body: SafeArea(
-          child: Center(
-            child:
+        drawer: MenuLateral(),
+        appBar: AppBar(),
+        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              SizedBox(height: 15),
+              Icon(
+                Icons.account_circle_sharp,
+                size: 70,
+              ),
+              SizedBox(height: 30),
+              Text(
+                "Nombre:",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                "Jhon 10",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+               Text(
+                "Licencia:",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                "XS1234",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                "Edad:",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                "56",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                "Correo:",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                "56",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+            ]),
+    );
+  }
+}
+/*
+child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               SizedBox(height: 15),
               Icon(
@@ -116,6 +184,4 @@ class UserInfo extends StatelessWidget {
               ),
             ]),
           ),
-        ));
-  }
-}
+ */
