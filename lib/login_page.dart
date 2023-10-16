@@ -1,13 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'dart:ffi';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'components/textfield.dart';
 import 'map_page.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import './services/storage_item.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -17,10 +14,29 @@ class LoginPage extends StatelessWidget {
   final passwordController = TextEditingController();
 
   final loginUrl = "http://localhost:1000/apiAuth";
-
-  final storage = new FlutterSecureStorage();
-
+  final userUrl = "http://localhost:1000/apiUser";
   //controladores boton de inicio de sesion
+  void saveUserInformation(String token, String id) async {
+    int idint = int.parse(id);
+    String graphQLQuery =
+        'query{ getUser(id: $idint){ name age license fk_plate }}';
+    try {
+      var url = Uri.parse(userUrl);
+      var response = await http.post(url,
+          headers: {"Content-type": "application/json", "tokenapi": token},
+          body: json.encode({'query': graphQLQuery}));
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        SecureStorage().writeSecureData("name", data["data"]["getUser"]["name"]);
+        SecureStorage().writeSecureData("age", data["data"]["getUser"]["age"]);
+        SecureStorage().writeSecureData("license", data["data"]["getUser"]["license"]);
+        SecureStorage().writeSecureData("plate", data["data"]["getUser"]["fk_plate"]);
+      }
+    } catch (e) {
+      print(e);
+    }
+    ;
+  }
 
   void sigIn(String id, String password, context) async {
     String graphQLQuery = 'query{ login(id: $id, password: "$password") }';
@@ -33,13 +49,16 @@ class LoginPage extends StatelessWidget {
       if (response.statusCode == 200 &&
           (response.body != '{"data":{"login":"false"}}')) {
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MapPage()));
+            //send storage to map page
+            context,
+            MaterialPageRoute(builder: (context) => MapPage()));
         print("Response status: ${response.statusCode}");
         //parse response body
         var data = jsonDecode(response.body);
-        await storage.write(key: "token", value: data["data"]["login"]);
-        String? token = await storage.read(key: "token");
-        print(token);
+        String token = data["data"]["Item1"];
+        SecureStorage().writeSecureData("token", token);
+        SecureStorage().writeSecureData("id", id);
+        saveUserInformation(token, id);
       }
     } catch (e) {
       print(e);
