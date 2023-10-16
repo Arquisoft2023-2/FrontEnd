@@ -2,7 +2,7 @@ version: '3'
 
 services:
   apig:
-    image: jyarac/api-gateway
+    image: quhan/api-gateway
     container_name: apig-component
     ports:
       - "1000:1000" 
@@ -36,3 +36,9 @@ services:
     environment:
         ACCEPT_EULA: "Y"
         SA_PASSWORD: "Password1!"
+    
+  user:
+    image: quhan/users
+    container_name: user-microservice
+    ports:
+      - "8080:8080"
