@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:login/login_page.dart';
+import 'package:login/user_info.dart';
 import 'package:quickalert/quickalert.dart';
 import 'dart:async';
 import './services/storage_item.dart';
@@ -64,7 +66,7 @@ class MapPage extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.person),
               title: Text('Perfil'),
-              onTap: () => null,
+              onTap:  () => Navigator.push(context, MaterialPageRoute(builder: (context) => UserInfo())),
             ),
             ListTile(
               leading: Icon(Icons.message),
@@ -79,7 +81,7 @@ class MapPage extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Salir'),
-              onTap: () => null,
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage())),
             )
           ],
         ),
