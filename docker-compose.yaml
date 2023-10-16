@@ -42,3 +42,9 @@ services:
     container_name: user-microservice
     ports:
       - "8080:8080"
+
+  gps:
+    image: jyarac/gps
+    container_name: gps-microservice
+    ports:
+      - "3001:3001"

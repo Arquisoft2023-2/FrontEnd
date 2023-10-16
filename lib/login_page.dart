@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'components/textfield.dart';
 import 'map_page.dart';
 import './services/storage_item.dart';
+import './services/recurrentQuery.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -18,8 +19,6 @@ class LoginPage extends StatelessWidget {
   //controladores boton de inicio de sesion
 
   void saveUserInformation(String token, String id) async {
-    print("Saving user info");
-     print("Saving user info id ${id}");
     int idint = int.parse(id);
     String graphQLQuery =
         'query{ getUser(id: $idint){ name age license fk_plate }}';
@@ -29,25 +28,17 @@ class LoginPage extends StatelessWidget {
           headers: {"Content-type": "application/json", "tokenapi": token},
           body: json.encode({'query': graphQLQuery}));
       if (response.statusCode == 200) {
-        print("Response ok");
-        print(response.body);
         var data = jsonDecode(response.body);
-        print("Response ok 2");
         SecureStorage().writeSecureData("name", data["data"]["getUser"]["name"]);
-        
         SecureStorage().writeSecureData("age", data["data"]["getUser"]["age"].toString());
-        print("Response ok 3");
         SecureStorage().writeSecureData("license", data["data"]["getUser"]["license"]);
         SecureStorage().writeSecureData("plate", data["data"]["getUser"]["fk_plate"]);
-        SecureStorage().readSecureData("plate").then((response) =>{
-          print("Saving user info secure s ${response}")
-        });        
+
       }
     } catch (e) {
       print(e);
     }
   }
-
   void sigIn(String id, String password, context) async {
     String graphQLQuery = 'query{ login(id: $id, password: "$password") }';
     try {
@@ -58,12 +49,13 @@ class LoginPage extends StatelessWidget {
 
       if (response.statusCode == 200 &&
           (response.body != '{"data":{"login":"false"}}')) {
+        recurrentQuery();
         Navigator.pushReplacement(
             //send storage to map page
             context,
             MaterialPageRoute(builder: (context) => MapPage()));
         print("Response status: ${response.statusCode}");
-        
+
         //parse response body
         var data = jsonDecode(response.body);
         String token = data["data"]["login"];
