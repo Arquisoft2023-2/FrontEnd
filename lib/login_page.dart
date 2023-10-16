@@ -6,6 +6,7 @@ import 'components/textfield.dart';
 import 'map_page.dart';
 import './services/storage_item.dart';
 import './services/recurrentQuery.dart';
+import 'package:quickalert/quickalert.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -27,18 +28,24 @@ class LoginPage extends StatelessWidget {
       var response = await http.post(url,
           headers: {"Content-type": "application/json", "tokenapi": token},
           body: json.encode({'query': graphQLQuery}));
+      print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        SecureStorage().writeSecureData("name", data["data"]["getUser"]["name"]);
-        SecureStorage().writeSecureData("age", data["data"]["getUser"]["age"].toString());
-        SecureStorage().writeSecureData("license", data["data"]["getUser"]["license"]);
-        SecureStorage().writeSecureData("plate", data["data"]["getUser"]["fk_plate"]);
-
+        print(data);
+        SecureStorage()
+            .writeSecureData("name", data["data"]["getUser"]["name"]);
+        SecureStorage()
+            .writeSecureData("age", data["data"]["getUser"]["age"].toString());
+        SecureStorage()
+            .writeSecureData("license", data["data"]["getUser"]["license"]);
+        SecureStorage()
+            .writeSecureData("plate", data["data"]["getUser"]["fk_plate"]);
       }
     } catch (e) {
       print(e);
     }
   }
+
   void sigIn(String id, String password, context) async {
     String graphQLQuery = 'query{ login(id: $id, password: "$password") }';
     try {
@@ -47,8 +54,15 @@ class LoginPage extends StatelessWidget {
           headers: {"Content-type": "application/json"},
           body: json.encode({'query': graphQLQuery}));
 
-      if (response.statusCode == 200 &&
-          (response.body != '{"data":{"login":"false"}}')) {
+      if (response.body == '{"data":{"login":"false"}}' ||
+          response.body == '{"data":{"login":null}}') {
+          //show quickalert thats indicates bad login
+          QuickAlert.show(
+            context: context,
+            title: "Contraseña o ID incorrecto",
+            type: QuickAlertType.error
+          );
+      } else {
         recurrentQuery();
         Navigator.pushReplacement(
             //send storage to map page
