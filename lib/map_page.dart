@@ -14,6 +14,7 @@ class MapPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
+        child: ListView(  
           padding: EdgeInsets.zero,
           children: [
             UserAccountsDrawerHeader(
