@@ -36,3 +36,9 @@ services:
     environment:
         ACCEPT_EULA: "Y"
         SA_PASSWORD: "Password1!"
+    
+  user:
+    image: quhan/users
+    container_name: user-microservice
+    ports:
+      - "8080:8080"

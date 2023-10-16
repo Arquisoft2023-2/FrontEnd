@@ -12,15 +12,16 @@ class MapPage extends StatelessWidget {
   }
 
   final notificationUrl = "http://localhost:1000/apiNotification";
+
   void recurrentQuery() async {
     Timer.periodic(Duration(minutes: 1), (timer) async {
       String? token = await SecureStorage().readSecureData("token");
-      String? plate = await SecureStorage().readSecureData("Plate");
+      String? plate = await SecureStorage().readSecureData("papiolate");
       String graphQLQuery = ' { getNotifications(id: "$plate"){ message } }';
 
       try {
         var response = await http.post(Uri.parse(notificationUrl),
-            headers: {"Content-type": "application/json", "token": token!},
+            headers: {"Content-type": "application/json", "tokenapi": token!},
             body: json.encode({'query': graphQLQuery}));
         if (response.statusCode == 200) {
           var data = jsonDecode(response.body);

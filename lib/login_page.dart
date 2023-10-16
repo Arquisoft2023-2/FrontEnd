@@ -6,7 +6,6 @@ import 'components/textfield.dart';
 import 'map_page.dart';
 import './services/storage_item.dart';
 
-
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
@@ -15,8 +14,30 @@ class LoginPage extends StatelessWidget {
   final passwordController = TextEditingController();
 
   final loginUrl = "http://localhost:1000/apiAuth";
-
+  final userUrl = "http://localhost:1000/apiUser";
   //controladores boton de inicio de sesion
+
+  void saveUserInformation(String token, String id) async {
+    int idint = int.parse(id);
+    String graphQLQuery =
+        'query{ getUser(id: $idint){ name age license fk_plate }}';
+    try {
+      var url = Uri.parse(userUrl);
+      var response = await http.post(url,
+          headers: {"Content-type": "application/json", "tokenapi": token},
+          body: json.encode({'query': graphQLQuery}));
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        SecureStorage().writeSecureData("name", data["data"]["getUser"]["name"]);
+        SecureStorage().writeSecureData("age", data["data"]["getUser"]["age"]);
+        SecureStorage().writeSecureData("license", data["data"]["getUser"]["license"]);
+        SecureStorage().writeSecureData("plate", data["data"]["getUser"]["fk_plate"]);
+      }
+    } catch (e) {
+      print(e);
+    }
+    ;
+  }
 
   void sigIn(String id, String password, context) async {
     String graphQLQuery = 'query{ login(id: $id, password: "$password") }';
@@ -30,13 +51,15 @@ class LoginPage extends StatelessWidget {
           (response.body != '{"data":{"login":"false"}}')) {
         Navigator.pushReplacement(
             //send storage to map page
-
-            context, MaterialPageRoute(builder: (context) => MapPage()));
+            context,
+            MaterialPageRoute(builder: (context) => MapPage()));
         print("Response status: ${response.statusCode}");
         //parse response body
         var data = jsonDecode(response.body);
-        SecureStorage().writeSecureData("token", data["data"]["login"]);
+        String token = data["data"]["Item1"];
+        SecureStorage().writeSecureData("token", token);
         SecureStorage().writeSecureData("id", id);
+        saveUserInformation(token, id);
       }
     } catch (e) {
       print(e);
