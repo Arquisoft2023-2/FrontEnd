@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login/login_page.dart';
 import 'package:login/user_info.dart';
+import 'package:login/login_page.dart';
 import 'package:quickalert/quickalert.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
@@ -13,6 +14,11 @@ class MapPage extends StatelessWidget {
 
   void showAlert(BuildContext context) {
     QuickAlert.show(context: context, type: QuickAlertType.warning);
+  }
+
+  void logOut(context) async {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   final notificationUrl = "http://localhost:1000/apiNotification";

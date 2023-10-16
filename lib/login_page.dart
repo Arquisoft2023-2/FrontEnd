@@ -18,7 +18,6 @@ class LoginPage extends StatelessWidget {
   final loginUrl = "http://localhost:1000/apiAuth";
   final userUrl = "http://localhost:1000/apiUser";
   //controladores boton de inicio de sesion
-
   void saveUserInformation(String token, String id) async {
     int idint = int.parse(id);
     String graphQLQuery =
