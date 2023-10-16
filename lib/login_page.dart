@@ -18,11 +18,9 @@ class LoginPage extends StatelessWidget {
 
   final loginUrl = "http://localhost:1000/apiAuth";
 
-
   final storage = new FlutterSecureStorage();
 
   //controladores boton de inicio de sesion
-
 
   void sigIn(String id, String password, context) async {
     String graphQLQuery = 'query{ login(id: $id, password: "$password") }';
