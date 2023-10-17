@@ -37,7 +37,14 @@ class UserInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: MenuLateral(),
-        appBar: AppBar(),
+        appBar: AppBar(
+        title: const Text("Información de usuario"),
+        backgroundColor: const LinearGradient(
+          colors: [Color(0xFF7CC6CD), Color(0XFF001F29)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ).colors[0],
+      ),
         body: 
         FutureBuilder(future: getData(),
         
@@ -112,7 +119,7 @@ class UserInfo extends StatelessWidget {
                 ),
               ),
               Text(
-                snap.data["age"] ?? "Default",
+                snap.data["age"] ?? "Defaultd",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
