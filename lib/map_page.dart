@@ -71,12 +71,7 @@ class MapPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text("Mapa"),
-            ElevatedButton(
-              onPressed: () {
-                showAlert(context);
-              },
-              child: const Text("Alerta"),
-            ),
+            
           ],
         ),
       ),

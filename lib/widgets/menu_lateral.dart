@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:login/login_page.dart';
 import 'package:login/map_page.dart';
+import 'package:login/message_page.dart';
 import 'package:login/services/storage_item.dart';
+import 'package:login/message_page.dart';
 import 'package:login/user_info.dart';
 
 
@@ -68,12 +70,7 @@ class MenuLateral extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.message),
               title: Text('Mensajes'),
-              onTap: () => null,
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Configuración'),
-              onTap: () => null,
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => homepage())),
             ),
             ListTile(
               leading: Icon(Icons.exit_to_app),
