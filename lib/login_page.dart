@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'components/textfield.dart';
+import 'dart:io';
 import 'map_page.dart';
 import './services/storage_item.dart';
 import './services/recurrentQuery.dart';
@@ -15,7 +16,7 @@ class LoginPage extends StatelessWidget {
   final userIDController = TextEditingController();
   final passwordController = TextEditingController();
 
-  final loginUrl = "http://localhost:1000/apiAuth";
+  final loginUrl = "http://10.0.2.2:1000/apiAuth";
   final userUrl = "http://localhost:1000/apiUser";
   //controladores boton de inicio de sesion
   void saveUserInformation(String token, String id) async {
@@ -147,24 +148,25 @@ class LoginPage extends StatelessWidget {
 
               //create elevated button to sign in
               ElevatedButton(
-                onPressed: () {
-                  sigIn(
-                      userIDController.text, passwordController.text, context);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-                  padding: EdgeInsets.symmetric(horizontal: 200, vertical: 50),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                ),
-                child: Text(
-                  "Iniciar Sesión",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
+  onPressed: () {
+    sigIn(userIDController.text, passwordController.text, context);
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12), // Adjust padding
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+  ),
+  child: Text(
+    "Iniciar Sesión",
+    style: TextStyle(
+      color: Colors.white,
+      fontSize: 16, // Adjust font size
+    ),
+  ),
+),
+
 
               const SizedBox(
                 height: 40,

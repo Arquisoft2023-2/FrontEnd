@@ -117,12 +117,7 @@ class MenuLateral extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.message),
               title: Text('Mensajes'),
-              onTap: () => null,
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Configuración'),
-              onTap: () => null,
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> homepage())),
             ),
             ListTile(
               leading: Icon(Icons.exit_to_app),
