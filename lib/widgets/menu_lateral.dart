@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login/login_page.dart';
+import 'package:login/map_page.dart';
 import 'package:login/user_info.dart';
 
 
@@ -32,6 +33,11 @@ class MenuLateral extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Notificaciones'),
+              onTap:  () => Navigator.push(context, MaterialPageRoute(builder: (context) => MapPage())),
             ),
             ListTile(
               leading: Icon(Icons.person),
