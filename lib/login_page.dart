@@ -38,10 +38,7 @@ class LoginPage extends StatelessWidget {
         SecureStorage().writeSecureData("age", data["data"]["getUser"]["age"].toString());
         print("Response ok 3");
         SecureStorage().writeSecureData("license", data["data"]["getUser"]["license"]);
-        SecureStorage().writeSecureData("plate", data["data"]["getUser"]["fk_plate"]);
-        SecureStorage().readSecureData("plate").then((response) =>{
-          print("Saving user info secure s ${response}")
-        });        
+        SecureStorage().writeSecureData("plate", data["data"]["getUser"]["fk_plate"]);      
       }
     } catch (e) {
       print(e);

@@ -9,7 +9,7 @@ import './services/storage_item.dart';
 
 
 class UserInfo extends StatelessWidget {
-  UserInfo({super.key});
+ 
 
   //controladores de edición de texto
   final userIDController = TextEditingController();
@@ -17,46 +17,63 @@ class UserInfo extends StatelessWidget {
 
   final loginUrl = "http://localhost:1000/apiUser";
 
-  //controladores boton de inicio de sesion
+  //controladores boton de inicio de sesion  
+  getData() async{
+    String? name = await SecureStorage().readSecureData("name");
+    String? age = await SecureStorage().readSecureData("age");
+    String? license = await SecureStorage().readSecureData("license");
+    String? plate = await SecureStorage().readSecureData("plate");
+    Map map ={
+      "name": name,
+      "age": age,
+      "license": license ,
+      "plate": plate ,
 
-  void sigIn(String id, String password, context) async {
-    String graphQLQuery = 'query{ login(id: $id, password: "$password") }';
-    try {
-      var url = Uri.parse(loginUrl);
-      var response = await http.post(url,
-          headers: {"Content-type": "application/json"},
-          body: json.encode({'query': graphQLQuery}));
-
-      if (response.statusCode == 200 &&
-          (response.body != '{"data":{"login":"false"}}')) {
-        Navigator.pushReplacement(
-            //send storage to map page
-
-            context, MaterialPageRoute(builder: (context) => MapPage()));
-        print("Response status: ${response.statusCode}");
-        //parse response body
-        var data = jsonDecode(response.body);
-        SecureStorage().writeSecureData("token", data["data"]["login"]);
-        SecureStorage().writeSecureData("id", id);
-      }
-    } catch (e) {
-      print("error");
-      print(e);
-    }
+    };
+    return map; 
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: MenuLateral(),
         appBar: AppBar(),
-        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              SizedBox(height: 15),
-              Icon(
-                Icons.account_circle_sharp,
-                size: 70,
-              ),
+        body: 
+        FutureBuilder(future: getData(),
+        
+        builder: (BuildContext context, AsyncSnapshot snap) {
+          if(snap.connectionState == ConnectionState.waiting){
+            return Center(child: CircularProgressIndicator());
+          }
+          else{
+            return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              SizedBox(height: 15, width: 2000,),
+              SizedBox(height: 150, width: 150, child: CircleAvatar(
+                child: ClipOval(
+                  child: Image.network('https://cdn-icons-png.flaticon.com/512/1995/1995504.png',
+                  width: 200,
+                  height: 200,
+                  fit: BoxFit.cover,
+                  ),
+                ),
+              ),),
+              
               SizedBox(height: 30),
+              Text(
+                "Avión tripulado:",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                snap.data["plate"] ?? "Default",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(height: 15),
               Text(
                 "Nombre:",
                 style: TextStyle(
@@ -65,12 +82,13 @@ class UserInfo extends StatelessWidget {
                 ),
               ),
               Text(
-                "Jhon 10",
+                 snap.data["name"] ?? "Default",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
                 ),
               ),
+              SizedBox(height: 15),
                Text(
                 "Licencia:",
                 style: TextStyle(
@@ -79,12 +97,13 @@ class UserInfo extends StatelessWidget {
                 ),
               ),
               Text(
-                "XS1234",
+                snap.data["license"] ?? "Default",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
                 ),
               ),
+              SizedBox(height: 15),
               Text(
                 "Edad:",
                 style: TextStyle(
@@ -93,27 +112,21 @@ class UserInfo extends StatelessWidget {
                 ),
               ),
               Text(
-                "56",
+                snap.data["age"] ?? "Default",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
                 ),
               ),
-              Text(
-                "Correo:",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                ),
-              ),
-              Text(
-                "56",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                ),
-              ),
-            ]),
+              SizedBox(height: 15),
+              
+            ]);
+        }
+          }
+          
+        
+        ,)
+        
     );
   }
 }
