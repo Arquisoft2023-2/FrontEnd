@@ -14,10 +14,22 @@
   }
 
   class _HomePageSate extends State<homepage> {
+
+    final userIDController = TextEditingController();
     final _textController = TextEditingController();
     String userMessage = '';
     final msgUrl = "http://localhost:1000/apiMsg";
     late Future<List<Message>> _listadoMensajes;
+
+    getData() async{
+    String? name = await SecureStorage().readSecureData("name");
+    String? plate = await SecureStorage().readSecureData("plate");
+    Map map ={
+      "name": name,
+      "plate": plate ,
+    };
+    return map; 
+    }
 
     Future<List<Message>> _getMensajes() async{
       List<Message> listaMsgs = [];
@@ -39,6 +51,18 @@
       } catch (e){
         throw Exception("Fallo la conexion");
       } 
+    }
+
+    void postMsg(String date, String text, context) async {
+      String graphQLQuery = 'query{createMsg(text:"$text" date:"$date")}';
+      try{
+        var url = Uri.parse(msgUrl);
+        var response = await http.post(url,
+            headers: {"Content-type": "application/json"},
+            body: json.encode({'query': graphQLQuery}));
+      } catch (e){
+        throw Exception("Fallo la conexion");
+      }  
     }
 
     @override
@@ -65,14 +89,47 @@
         ).colors[0],
       ),
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
-          body: FutureBuilder(
+          body: 
+          FutureBuilder(
             future: _listadoMensajes,
             builder: (context, snapshot){
               if(snapshot.hasData){
-                return ListView(
-                  children: listMsgs(snapshot.data!),
+                return Column(
+                  children: [
+                    ListView(
+                      shrinkWrap: true,
+                      children: listMsgs(snapshot.data!),
+                    ),
+                    TextField(
+                      controller: _textController,
+                      textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          hintText: 'Escribe tu mensaje aqui',
+                          border: OutlineInputBorder(),
+                          hintStyle: TextStyle(color: Color.fromARGB(255, 231, 205, 202)),
+                          suffixIcon: IconButton(
+                            onPressed: (){
+                              _textController.clear();
+                            }, icon: Icon(Icons.clear),
+                          )
+                        ),
+                      ),
+                      MaterialButton(
+                        height:45,
+                        onPressed: () {
+                          setState(() {
+                            userMessage = _textController.text;
+                          });
+                          postMsg("02/11/2023", userMessage, context);
+                          setState(() {
+                            _listadoMensajes = _getMensajes();
+                          });
+                        },
+                        color: const Color.fromARGB(255, 42, 65, 77),
+                          child: Text('Enviar', style: TextStyle(color: Colors.white),),
+                      ),
+                  ],
                 );
-                
               }else if(snapshot.hasError){
                 return Text("Error");
               }

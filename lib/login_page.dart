@@ -16,7 +16,7 @@ class LoginPage extends StatelessWidget {
   final userIDController = TextEditingController();
   final passwordController = TextEditingController();
 
-  final loginUrl = "http://10.0.2.2:1000/apiAuth";
+  final loginUrl = "http://localhost:1000/apiAuth";
   final userUrl = "http://localhost:1000/apiUser";
   //controladores boton de inicio de sesion
   void saveUserInformation(String token, String id) async {
@@ -48,6 +48,11 @@ class LoginPage extends StatelessWidget {
 
   void sigIn(String id, String password, context) async {
     String graphQLQuery = 'query{ login(id: $id, password: "$password") }';
+    //Navigator.pushReplacement(
+            //send storage to map page
+            //context,
+            //MaterialPageRoute(builder: (context) => MapPage()));
+          //print("Response status: ${response.statusCode}");
     try {
       var url = Uri.parse(loginUrl);
       var response = await http.post(url,
@@ -61,6 +66,7 @@ class LoginPage extends StatelessWidget {
             context: context,
             title: "Contraseña o ID incorrecto",
             type: QuickAlertType.error
+            
           );
       } else {
         recurrentQuery();
