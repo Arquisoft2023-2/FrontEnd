@@ -4,7 +4,8 @@
   import 'package:login/widgets/menu_lateral.dart';
   import 'package:http/http.dart' as http;
   import 'package:login/services/storage_item.dart';
-  
+  import 'package:flutter/foundation.dart' show kIsWeb;
+
   class homepage extends StatefulWidget {
     const homepage({Key? key}) : super(key: key);
     
@@ -18,7 +19,8 @@
     final userIDController = TextEditingController();
     final _textController = TextEditingController();
     String userMessage = '';
-    final msgUrl = "http://localhost:1000/apiMsg";
+    final String msgUrl = kIsWeb ? "http://localhost:1000/apiMsg" : "http://10.0.2.2:444/apiMsg";
+    //final msgUrl = "http://10.0.2.2:444/apiMsg";
     late Future<List<Message>> _listadoMensajes;
 
     getData() async{
@@ -60,6 +62,15 @@
         var response = await http.post(url,
             headers: {"Content-type": "application/json"},
             body: json.encode({'query': graphQLQuery}));
+        if (response.statusCode == 200) {
+        // La petición fue exitosa
+          print('Petición POST exitosa');
+          print('Respuesta del servidor: ${response.body}');
+        } else {
+          // La petición falló
+            print('Error en la petición POST');
+            print('Código de estado del servidor: ${response.statusCode}');
+          }
       } catch (e){
         throw Exception("Fallo la conexion");
       }  

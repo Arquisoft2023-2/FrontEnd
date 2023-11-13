@@ -8,6 +8,7 @@ import 'map_page.dart';
 import './services/storage_item.dart';
 import './services/recurrentQuery.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -15,9 +16,10 @@ class LoginPage extends StatelessWidget {
   //controladores de edición de texto
   final userIDController = TextEditingController();
   final passwordController = TextEditingController();
-
-  final loginUrl = "http://localhost:1000/apiAuth";
-  final userUrl = "http://localhost:1000/apiUser";
+  final String loginUrl = kIsWeb ? "http://localhost:1000/apiAuth" : "http://10.0.2.2:444/apiAuth";
+  final String userUrl = kIsWeb ? "http://localhost:1000/apiUser" : "http://10.0.2.2:444/apiUser";
+  //final loginUrl = "http://10.0.2.2:444/apiAuth";
+  //final userUrl = "http://10.0.2.2:444/apiUser";
   //controladores boton de inicio de sesion
   void saveUserInformation(String token, String id) async {
     int idint = int.parse(id);
@@ -58,7 +60,6 @@ class LoginPage extends StatelessWidget {
       var response = await http.post(url,
           headers: {"Content-type": "application/json"},
           body: json.encode({'query': graphQLQuery}));
-
       if (response.body == '{"data":{"login":"false"}}' ||
           response.body == '{"data":{"login":null}}') {
           //show quickalert thats indicates bad login
