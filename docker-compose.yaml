@@ -2,22 +2,36 @@ version: '3'
 
 services:
   apig:
-    image: jyarac/api-gateway
+    image: quhan/api-gateway:latest
     container_name: apig-component
     ports:
       - "1000:1000" 
     depends_on:
+      - message
       - notification
+      - gps
       - authms
+      - user
+  message:
+    image: julianfernandezs/messagems:latest
+    container_name: message-microservice
+    ports:
+      - "8000:8000"
 
   notification:
-    image: jyarac/notification-ms
+    image: jyarac/notification-ms:latest
     container_name: notification-microservice
     ports:
       - "3000:3000"
 
+  gps:
+    image: jyarac/gps:latest
+    container_name: gps-microservice
+    ports:
+      - "3001:3001"
+
   authms:
-    image: jfc12/authms
+    image: jfc12/authms:latest
     depends_on:
         - "authmsdbc"
     container_name: authms_c
@@ -27,7 +41,6 @@ services:
       ASPNETCORE_URLS: "http://+"
       ASPNETCORE_ENVIRONMENT: Development
 
-
   authmsdbc:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     container_name: authmsdbc
@@ -36,3 +49,41 @@ services:
     environment:
         ACCEPT_EULA: "Y"
         SA_PASSWORD: "Password1!"
+
+  user:
+    image: quhan/users:latest
+    container_name: user-microservice
+    ports:
+      - "8080:8080"
+  webproxy:
+    image: quhan/webproxy:latest
+    container_name: proxy-web
+    ports:
+      - "443:443"
+    depends_on:
+      - "apig"
+
+  mobileproxy:
+    image: julianfernandezs/proxyinverso:latest  
+    container_name: proxy-mobile
+    ports:
+      - "444:444"
+    depends_on:
+      - "apig"
+
+  soapnode:
+    image: jyarac/soap-node-local
+    container_name: soap-service
+    ports:
+      - 3010:3010
+
+  soapproxy:
+    image: jomaldonadob/proxyinverso
+    container_name: proxyinverso
+    ports:
+      - "446:445"
+    depends_on:
+      - "soapnode"
+    
+
+
