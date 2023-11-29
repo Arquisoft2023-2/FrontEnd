@@ -55,13 +55,10 @@ services:
     container_name: user-microservice
     ports:
       - "8080:8080"
-  webproxy:
-    image: quhan/webproxy:latest
-    container_name: proxy-web
+  frontweb:
+    image: quhan/front:latest
     ports:
       - "443:443"
-    depends_on:
-      - "apig"
 
   mobileproxy:
     image: julianfernandezs/proxyinverso:latest  
@@ -84,6 +81,8 @@ services:
       - "446:445"
     depends_on:
       - "soapnode"
+  
+  
     
 
 
