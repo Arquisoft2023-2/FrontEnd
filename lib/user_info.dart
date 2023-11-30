@@ -41,9 +41,9 @@ class UserInfo extends StatelessWidget {
   //controladores de edición de texto
   final userIDController = TextEditingController();
   final passwordController = TextEditingController();
-
-  final loginUrl = "http://localhost:1000/apiUser";
-
+  static const envLogin = String.fromEnvironment('envURL');
+  //final loginUrl = "http://localhost:1000/apiUser";
+  final String loginUrl = envLogin + "/apiUser";
   //call function soapRequest and save the result in var result
   var result = soapRequest();
   //controladores boton de inicio de sesion

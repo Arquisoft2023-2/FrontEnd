@@ -21,8 +21,9 @@ class MapPage extends StatelessWidget {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
-
-  final notificationUrl = "http://localhost:1000/apiNotification";
+  static const envNot = String.fromEnvironment('envUrl');
+  final String notificationUrl = envNot + "/apiNotification";
+  //final notificationUrl = "http://localhost:1000/apiNotification";
 
   void recurrentQuery(BuildContext context) async {
     print('hola');

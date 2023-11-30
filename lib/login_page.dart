@@ -12,12 +12,15 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-
   //controladores de edición de texto
   final userIDController = TextEditingController();
   final passwordController = TextEditingController();
-  final String loginUrl = kIsWeb ? "http://localhost:1000/apiAuth" : "http://10.0.2.2:444/apiAuth";
-  final String userUrl = kIsWeb ? "http://localhost:1000/apiUser" : "http://10.0.2.2:444/apiUser";
+  //final String loginUrl = kIsWeb ? "http://localhost:1000/apiAuth" : "http://10.0.2.2:444/apiAuth";
+  static const envLogin = String.fromEnvironment('envURL');
+  static const envUser = String.fromEnvironment('envURL');
+  final String loginUrl = envLogin + "/apiAuth";
+  final String userUrl = envUser + "/apiUser";
+  //final String userUrl = kIsWeb ? "http://localhost:1000/apiUser" : "http://10.0.2.2:444/apiUser";
   //final loginUrl = "http://10.0.2.2:444/apiAuth";
   //final userUrl = "http://10.0.2.2:444/apiUser";
   //controladores boton de inicio de sesion
@@ -187,4 +190,11 @@ class LoginPage extends StatelessWidget {
           ),
         ));
   }
+}
+
+class Environment {
+  static const String env = String.fromEnvironment('env');
+  static const String clientId = String.fromEnvironment('clientId');
+  static const String clientSecret = String.fromEnvironment('clientSecret');
+  static const String callbackUrl = String.fromEnvironment('callbackUrl');
 }

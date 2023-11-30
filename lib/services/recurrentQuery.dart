@@ -5,7 +5,10 @@ import 'dart:convert';
 import 'package:quickalert/quickalert.dart';
 import '../map_page.dart' as mapPage;
 
-const notificationUrl = "http://localhost:1000/apiNotification";
+
+const envNot = String.fromEnvironment('envUrl');
+const String notificationUrl = envNot + "/apiNotification";
+//const notificationUrl = "http://localhost:1000/apiNotification";
 
 void recurrentQuery() async {
   Timer.periodic(Duration(minutes: 1), (timer) async {

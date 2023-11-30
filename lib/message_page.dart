@@ -19,7 +19,9 @@
     final userIDController = TextEditingController();
     final _textController = TextEditingController();
     String userMessage = '';
-    final String msgUrl = kIsWeb ? "http://localhost:1000/apiMsg" : "http://10.0.2.2:444/apiMsg";
+    static const envMsg = String.fromEnvironment('envUrl');
+    final String msgUrl = envMsg + "/apiMsg";
+    //final String msgUrl = kIsWeb ? "http://localhost:1000/apiMsg" : "http://10.0.2.2:444/apiMsg";
     //final msgUrl = "http://10.0.2.2:444/apiMsg";
     late Future<List<Message>> _listadoMensajes;
 

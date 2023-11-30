@@ -1,0 +1,4 @@
+{
+    "envURL" : "http://localhost:1000",
+    "soapRequest": "http://localhost:8000"
+}
